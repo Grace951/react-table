@@ -1,0 +1,54 @@
+{
+  "name": "react-sort-search-table",
+  "version": "0.0.0",
+  "description": "simple react sortable searchable table",
+  "main": "lib/react-sort-search-table.js",
+  "scripts": {
+    "compile": "webpack --verbose --colors --display-error-details --config=webpack.config.dev.js",
+	"prepublish": "npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Grace951/react-table.git"
+  },
+  "keywords": [
+    "react",
+    "sortable",
+    "search",
+    "pager",
+    "table"
+  ],
+  "peerDependencies": {
+    "react": "^15.0.0"
+  },
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "font-awesome": "^4.7.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-eslint": "^7.1.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "babel-preset-stage-1": "^6.22.0",    
+    "css-loader": "^0.26.0",
+    "file-loader": "^0.9.0",    
+    "sass-loader": "^4.1.0",
+    "style-loader": "^0.13.1",       
+    "url-loader": "^0.5.7",         
+    "copyfiles": "^1.0.0",
+    "react": "^15.4",
+    "font-awesome-sass-loader": "^1.0.3",
+    "node-sass": "^4.5.0",
+    "webpack": "^2.2.1"    
+  },
+  "author": "Ching-Ching Yeh <learningg@gmail.com> (https://github.com/Grace951)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grace951/react-table/issues"
+  },
+  "homepage": "https://github.com/Grace951/react-table#readme"
+}
