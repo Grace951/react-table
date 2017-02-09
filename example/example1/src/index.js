@@ -437,6 +437,8 @@ const ProductsTblPage = (props) =>{
 						{custd: BaseProductDeleteComponent, keyItem: "delete"}
 						]}
 			dKey={col}
+			search={false}
+			defaultCSS={true}
 		/>
 	);
 };

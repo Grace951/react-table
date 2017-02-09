@@ -1,5 +1,5 @@
 import "font-awesome-sass-loader";
-import './SortableTbl.scss';
+// import './SortableTbl.scss';
 
 import React from 'react';
 import {SortableTblPager} from './SortableTblPager';
@@ -20,6 +20,7 @@ class SortableTbl extends React.Component{
 			this.filter = this.filter.bind(this);
 			this.setCurrentPage = this.setCurrentPage.bind(this);
 			this.setRowsPerPage = this.setRowsPerPage.bind(this);
+			if(props.defaultCSS===true) require ('./SortableTbl.scss');
 			
 		}
 
@@ -104,9 +105,12 @@ class SortableTbl extends React.Component{
 			return (
 				<div className="table-responsive">
 					<div className="sortable-table">
-						<div className="search-box">
-							Search: <input className="search" type="text" name="" value={this.state.filter} placeholder="Filter Result" onChange={this.filter} />
-						</div>						
+						{ this.props.search && 
+							(
+								<div className="search-box">
+									Search: <input className="search" type="text" name="" value={this.state.filter} placeholder="Filter Result" onChange={this.filter} />
+								</div>
+							)}
 						{
 							(pagers.paging)?<SortableTblPager curr={pagers.curr} totalPage={pagesCount} setCurrentPage={this.setCurrentPage} 
 												setRowsPerPage={this.setRowsPerPage} totalsCount={this.state.data.length} rowPerPage={pagers.rowsPerPage}/>:""
@@ -143,6 +147,8 @@ SortableTbl.propTypes = {
 	dKey: React.PropTypes.array,
 	customTd: React.PropTypes.array,
 	paging: React.PropTypes.bool,
+	search: React.PropTypes.bool,
+	defaultCSS: React.PropTypes.bool,
 	defaultRowsPerPage: React.PropTypes.number
 };
 
@@ -153,6 +159,8 @@ SortableTbl.defaultProps = {
 	dKey: [],
 	customTd: [],
 	paging: true,
+	search: true,
+	defaultCSS: true,
 	defaultRowsPerPage: 5
 };
 

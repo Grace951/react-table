@@ -210,6 +210,10 @@ ReactDOM.render(<ProductsTblPage/>, document.getElementById("app"));
   * Table header to be displayed
 * `paging`: boolean, default `true`
     * show pagine or not
+* `search`: boolean, default `true`
+    * show search bar or not
+* `defaultCSS`: boolean, default `true`
+    * Use Default CSS or not
 * `customTd`: Array
    * Use your Custom Component to Render Specific TD
    * The Custom Component will received 3 props
