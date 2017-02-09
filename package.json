@@ -1,11 +1,11 @@
 {
   "name": "react-sort-search-table",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "simple react sortable searchable table",
   "main": "lib/react-sort-search-table.js",
   "scripts": {
     "compile": "webpack --verbose --colors --display-error-details --config=webpack.config.dev.js",
-	"prepublish": "npm run compile"
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -33,17 +33,17 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
-    "babel-preset-stage-1": "^6.22.0",    
+    "babel-preset-stage-1": "^6.22.0",
     "css-loader": "^0.26.0",
-    "file-loader": "^0.9.0",    
+    "file-loader": "^0.9.0",
     "sass-loader": "^4.1.0",
-    "style-loader": "^0.13.1",       
-    "url-loader": "^0.5.7",         
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
     "copyfiles": "^1.0.0",
     "react": "^15.4",
     "font-awesome-sass-loader": "^1.0.3",
     "node-sass": "^4.5.0",
-    "webpack": "^2.2.1"    
+    "webpack": "^2.2.1"
   },
   "author": "Ching-Ching Yeh <learningg@gmail.com> (https://github.com/Grace951)",
   "license": "MIT",
