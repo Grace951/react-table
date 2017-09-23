@@ -40,8 +40,8 @@ class SortableTbl extends React.Component{
 		filter(e){
 			let newData = this.props.tblData.filter((item)=>{
 				for (let key in item) {
-					let v = item[key].toString().toLowerCase();
-					if (v.indexOf(e.target.value.toLowerCase()) !== -1 ) {
+					let v = item[key] && item[key].toString().toLowerCase();
+					if (v && v.indexOf(e.target.value.toLowerCase()) !== -1 ) {
 						return true;
 					}
 				}
