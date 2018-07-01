@@ -83,7 +83,7 @@ class SortableTblPager extends React.Component{
 						<label  className="SortableTblLabel">rows per page</label>
 					</div>
 					<div className="desc col-sm-5 col-xs-12">
-						<div>Page {this.state.currPage + 1} of totlas {this.props.totalPage}, totlas {this.props.totalsCount} rows</div>
+						<div>Page {this.state.currPage + 1} of totals {this.props.totalPage}, totals {this.props.totalsCount} rows</div>
 					</div>
 				</div>
 			);

@@ -16,7 +16,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.1",
     "react-imageloader": "^2.1.0",
-	"react-sort-search-table": "^0.1.0"
+	"react-sort-search-table": "^0.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
