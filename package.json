@@ -1,6 +1,6 @@
 {
   "name": "react-sort-search-table",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "simple react sortable searchable table",
   "main": "lib/react-sort-search-table.js",
   "scripts": {
