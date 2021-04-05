@@ -1,157 +1,306 @@
-import "font-awesome-sass-loader";
-// import './SortableTbl.scss';
+import React, { useState, useEffect } from "react";
+import SortableTblPager from "./SortableTblPager";
+import SortableTblTh from "./SortableTblTh";
+import SortableTblTd from "./SortableTblTd";
+import styled from "styled-components";
 
-import React from 'react';
-import {SortableTblPager} from './SortableTblPager';
-import {SortableTblTh} from './SortableTblTh';
-import {SortableTblTd} from './SortableTblTd';
-
-class SortableTbl extends React.Component{
-		constructor(props) {
-			super(props);
-			this.state = {
-				data: this.props.tblData || [],
-				asc: (this.props.dKey || []).reduce((acc, cur) =>{ return Object.assign({}, acc, {[cur]: null});}, {}),
-				filter: "",
-				pagers: { paging: this.props.paging, curr: 0, rowsPerPage: this.props.defaultRowsPerPage}
-			};
-			//constructor is only invoked when the component is first created. if data change, need to update on componentWillReceiveProps
-			this.sortData = this.sortData.bind(this);
-			this.filter = this.filter.bind(this);
-			this.setCurrentPage = this.setCurrentPage.bind(this);
-			this.setRowsPerPage = this.setRowsPerPage.bind(this);
-			if(props.defaultCSS===true) require ('./SortableTbl.scss');
-			
+const SortableTblStyled = styled.div`
+	&.defaultCSS {
+		table,
+		thead,
+		thead tr {
+			width: 100%;
 		}
-
-		componentWillMount() {
-		}
-		componentDidMount() {
-		}
-		componentWillReceiveProps(nextProps) {
-			//constructor is only invoked when the component is first created. if data change, need to update on componentWillReceiveProps
-			if (nextProps.tblData !== this.state.data) {
-				this.setState({ data: nextProps.tblData });
+		.search-box {
+			padding: 10px 0px;
+			input.search {
+				width: 200px;
+				margin-left: 10px;
+				height: 30px;
+				border: none;
+				padding-left: 10px;
+				border-radius: 205px;
+				border: 2px solid #c30;
 			}
 		}
-		componentDidUpdate (prevProps, prevState) {
-
-		}
-		filter(e){
-			let newData = this.props.tblData.filter((item)=>{
-				for (let key in item) {
-					let v = item[key] && item[key].toString().toLowerCase();
-					if (v && v.indexOf(e.target.value.toLowerCase()) !== -1 ) {
-						return true;
-					}
-				}
-				return false;
-			});
-			this.setState({
-				filter: e.target.value,
-				data: newData
-			});
-		}
-		sortData(dKey, nAsc){
-			let newAsc = this.state.asc;
-			let newData = this.state.data;
-			newData.sort((a,b)=>{
-				if (a[dKey] === b[dKey])
-					return 0;
-				if (nAsc ? a[dKey] > b[dKey] : a[dKey] < b[dKey])
-					return 1;
-				if (nAsc ? a[dKey] < b[dKey] : a[dKey] > b[dKey])
-					return -1;
-				return 0;
-			});
-			for (let prop in newAsc) {
-				newAsc[prop] = null;
+		.empty {
+			td .wrap {
+				min-height: 200px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #eaeaea;
 			}
-			this.setState(
-				{
-					asc: Object.assign({}, newAsc, {[dKey]: nAsc}),
-					data: newData
-				}
-			);
 		}
-		setCurrentPage(i){			
-			let index = parseInt(i);
-			this.setState(
-				{
-					pagers: Object.assign({}, this.state.pagers, {curr: index}) 
+	}
+	input {
+		outline: none;
+	}
+	.desc {
+		margin: 5px 0;
+		text-align: right;
+	}
+	input:-internal-autofill-selected {
+		background-color: transparent !important;
+	}
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	textarea:-webkit-autofill,
+	textarea:-webkit-autofill:hover,
+	textarea:-webkit-autofill:focus,
+	select:-webkit-autofill,
+	select:-webkit-autofill:hover,
+	select:-webkit-autofill:focus {
+		background-color: transparent !important;
+	}
+
+	* {
+		box-sizing: border-box;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	table {
+		display: table;
+		border-collapse: none;
+		border-spacing: 0px;
+		border-color: none;
+	}
+
+	[contenteditable] {
+		outline: 0px solid transparent;
+	}
+
+	fieldset {
+		border: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	select,
+	button {
+		appearance: none;
+		background: none;
+		outline: 0;
+		cursor: pointer;
+	}
+	button:disabled {
+		background-color: #ccc;
+		cursor: auto;
+	}
+	input,
+	select,
+	textarea {
+		appearance: none;
+		background-clip: border-box;
+		margin: 0;
+		outline: 0;
+		text-align: left;
+		border: none;
+	}
+
+	input[type="checkbox"],
+	input[type="radio"] {
+		width: auto;
+		height: auto;
+	}
+
+	input[type="checkbox"] {
+		appearance: checkbox;
+	}
+
+	input[type="radio"] {
+		appearance: radio;
+	}
+
+	textarea,
+	select[size],
+	select[multiple] {
+		height: auto;
+	}
+	select::-ms-expand {
+		display: none;
+	}
+
+	select:focus::-ms-value {
+		background-color: transparent;
+		color: inherit;
+	}
+
+	textarea {
+		resize: vertical;
+	}
+
+	input[type="search"]::-webkit-search-decoration {
+		display: none;
+	}
+`;
+
+const SortableTbl = (props) => {
+	const {
+		tblData,
+		paging,
+		tHead,
+		customTd,
+		dKey,
+		defaultCSS,
+		defaultRowsPerPage,
+		search,
+	} = props;
+	const [filterString, setFilterString] = useState("");
+	const [data, setData] = useState(tblData || []);
+	const [pagers, setPager] = useState({
+		paging: paging,
+		curr: 0,
+		rowsPerPage: defaultRowsPerPage,
+	});
+	const defaultAsc = (dKey || []).reduce((acc, cur) => {
+		return Object.assign({}, acc, { [cur]: null });
+	}, {});
+	const [asc, setAsc] = useState(defaultAsc);
+
+	useEffect(() => {
+		setData(tblData);
+	}, [tblData]);
+
+	function appplyfilter(e) {
+		let newData = tblData.filter((item) => {
+			for (let key in item) {
+				let v = item[key] && item[key].toString().toLowerCase();
+				if (v && v.indexOf(e.target.value.toLowerCase()) !== -1) {
+					return true;
 				}
-			);
+			}
+			return false;
+		});
+
+		setFilterString(e.target.value);
+		setData(newData);
+	}
+	function sortData(dKey, nAsc) {
+		let newAsc = asc;
+		let newData = data;
+		newData.sort((a, b) => {
+			if (a[dKey] === b[dKey]) return 0;
+			if (nAsc ? a[dKey] > b[dKey] : a[dKey] < b[dKey]) return 1;
+			if (nAsc ? a[dKey] < b[dKey] : a[dKey] > b[dKey]) return -1;
+			return 0;
+		});
+		for (let prop in newAsc) {
+			newAsc[prop] = null;
 		}
-		setRowsPerPage(i){			
-			let index = parseInt(i);
-			let nCurr = this.state.pagers.curr;
-			let pagesCount = Math.ceil(this.state.data.length / index);
-			//console.log(this.state.pagers.curr, pagesCount, index);
-			if (this.state.pagers.curr >= pagesCount)
-				nCurr = pagesCount - 1;
-			this.setState(
-				{
-					pagers: Object.assign({}, this.state.pagers, {rowsPerPage: index, curr: nCurr}) 
-				}
-			);
-		}		
-		render() {
-			let pageData = this.state.data;
-			let pagers = this.state.pagers;
-			let pagesCount = Math.ceil(this.state.data.length / pagers.rowsPerPage);
-			if (pagers.paging){
-				pageData = pageData.slice(pagers.curr * pagers.rowsPerPage , (pagers.curr + 1) * pagers.rowsPerPage );				
-			}	
-			return (
-				<div className="table-responsive">
-					<div className="sortable-table">
-						{ this.props.search && 
-							(
-								<div className="search-box">
-									Search: <input className="search" type="text" name="" value={this.state.filter} placeholder="Filter Result" onChange={this.filter} />
-								</div>
-							)}
-						{
-							(pagers.paging)?<SortableTblPager curr={pagers.curr} totalPage={pagesCount} setCurrentPage={this.setCurrentPage} 
-												setRowsPerPage={this.setRowsPerPage} totalsCount={this.state.data.length} rowPerPage={pagers.rowsPerPage}/>:""
-						}
-						<table className="table table-hover table-striped" >
-							<thead>
-							<tr>								
-								{
-									this.props.dKey.map((item, id) => {
-										return (
-											<SortableTblTh key={id} sortData={this.sortData} asc={this.state.asc[item]}  dataKey={item} >
-												{this.props.tHead[parseInt(id)]}
-											</SortableTblTh>
-									);})
-								}
-							</tr>
-							</thead>
-							<tbody>
-							{
-								pageData.map( (item, id) => {
-									return <SortableTblTd key={id} tdData={item} {...this.props} dKey={this.props.dKey} customTd={this.props.customTd}/>;
-								})
-							}
-							</tbody>
-						</table>						
+
+		setAsc(Object.assign({}, newAsc, { [dKey]: nAsc }));
+		setData(newData);
+	}
+	function setCurrentPage(i) {
+		let index = parseInt(i);
+		setPager(Object.assign({}, pagers, { curr: index }));
+	}
+	function setRowsPerPage(i) {
+		let index = parseInt(i);
+		let nCurr = pagers.curr;
+		let pagesCount = Math.ceil(data.length / index);
+		if (pagers.curr >= pagesCount) nCurr = pagesCount - 1;
+		setPager(
+			Object.assign({}, pagers, {
+				rowsPerPage: index,
+				curr: nCurr,
+			})
+		);
+	}
+
+	let pagesCount = Math.ceil(data.length / pagers.rowsPerPage);
+	let pageData = data.slice();
+	if (pagers.paging) {
+		pageData = pageData.slice(
+			pagers.curr * pagers.rowsPerPage,
+			(pagers.curr + 1) * pagers.rowsPerPage
+		);
+	}
+	const empty = !pageData || !pageData.length;
+	return (
+		<SortableTblStyled className={defaultCSS ? "defaultCSS" : ""}>
+			<div className="sortable-table">
+				{search && (
+					<div className="search-box">
+						Search:{" "}
+						<input
+							className="search"
+							type="text"
+							name=""
+							value={filterString}
+							placeholder="Filter Result"
+							onChange={appplyfilter}
+						/>
 					</div>
-				</div>
-			);
-		}
-}
-SortableTbl.propTypes = {
-	tblData: React.PropTypes.array,
-	tHead: React.PropTypes.array,
-	dKey: React.PropTypes.array,
-	customTd: React.PropTypes.array,
-	paging: React.PropTypes.bool,
-	search: React.PropTypes.bool,
-	defaultCSS: React.PropTypes.bool,
-	defaultRowsPerPage: React.PropTypes.number
-};
+				)}
 
+				<table className="table table-hover table-striped">
+					<thead>
+						<tr>
+							{dKey.map((item, id) => {
+								return (
+									<SortableTblTh
+										key={id}
+										sortData={sortData}
+										defaultCSS={defaultCSS}
+										asc={asc[item]}
+										dataKey={item}
+									>
+										{tHead[parseInt(id)]}
+									</SortableTblTh>
+								);
+							})}
+						</tr>
+					</thead>
+					<tbody className={empty ? "empty" : ""}>
+						{pageData.map((item, id) => {
+							return (
+								<SortableTblTd
+									key={id}
+									{...props}
+									defaultCSS={defaultCSS}
+									tdData={item}
+									dKey={dKey}
+									customTd={customTd}
+								/>
+							);
+						})}
+						{empty && (
+							<tr>
+								<td colSpan={dKey.length}>
+									<div className="wrap">No Data</div>
+								</td>
+							</tr>
+						)}
+					</tbody>
+				</table>
+
+				{!empty &&
+					(pagers.paging ? (
+						<SortableTblPager
+							defaultCSS={defaultCSS}
+							curr={pagers.curr}
+							totalPage={pagesCount}
+							setCurrentPage={setCurrentPage}
+							setRowsPerPage={setRowsPerPage}
+							totalsCount={data.length}
+							rowPerPage={pagers.rowsPerPage}
+						/>
+					) : (
+						""
+					))}
+			</div>
+		</SortableTblStyled>
+	);
+};
 
 SortableTbl.defaultProps = {
 	tblData: [],
@@ -161,7 +310,7 @@ SortableTbl.defaultProps = {
 	paging: true,
 	search: true,
 	defaultCSS: true,
-	defaultRowsPerPage: 5
+	defaultRowsPerPage: 5,
 };
 
 export default SortableTbl;

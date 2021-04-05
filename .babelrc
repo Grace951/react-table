@@ -1,3 +1,28 @@
 {
-  "presets": [["es2015", {"loose": true, "module": false}], "stage-1", "react"],
-}
+	"presets":[
+		"@babel/preset-react",
+		  [
+			  "@babel/preset-env",
+			  {
+				  "modules": false,
+				  "debug": true,
+				  "loose": true,
+				  "targets": {
+					  "browsers": [
+						  "last 2 Chrome versions",
+						  "last 2 ChromeAndroid versions",
+						  "last 2 Edge versions",
+						  "last 2 Firefox versions",
+						  "last 2 FirefoxAndroid versions",
+						  "last 2 iOS versions",
+						  "last 2 Opera versions",
+						  "last 2 Safari versions",
+						  "ie >= 11"
+					  ]
+				  }
+			  }
+		  ]
+	],
+	"plugins": ["babel-plugin-styled-components"]
+  }
+  

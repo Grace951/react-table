@@ -1,45 +1,54 @@
-import React from 'react';
-class SortableTblTh extends React.Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			sortCssClass: "fa fa-sort"
-		};
-		this.sort = this.sort.bind(this);
-	}
-	componentWillReceiveProps(nextProps) {
-		//constructor is only invoked when the component is first created. if data change, need to update on componentWillReceiveProps
-		let a = "fa fa-sort";
-		switch (nextProps.asc){
-			case null:
-				a = "fa fa-sort";
-			break;
-			case true:
-				a = "fa fa-sort-amount-asc";
-			break;
-			case false:
-				a = "fa fa-sort-amount-desc";
-			break;
-		}
-		//console.log(a);
-		if (nextProps.asc !== this.props.asc) {
-			this.setState({ sortCssClass: a });
+import React from "react";
+import styled from "styled-components";
+
+const Wrap = styled.th`
+	&.defaultCSS {
+		height: 80px;
+		min-width: ${({ count }) => 100 / count}%;
+		cursor: pointer;
+		position: relative;
+		text-align: center;
+		min-height: 80px;
+		background-color: #db3615;
+		color: #fff;
+		padding: 5px;
+		line-height: 25px;
+		border-bottom: 5px solid #ccc;
+		&.sort-desc,
+		&.sort-asc {
+			background-color: #e0914c;
+			border-bottom: 5px solid #c70000;
 		}
 	}
-	sort(){
-		this.props.sortData(this.props.dataKey, !this.props.asc);
+`;
+const SortableTblTh = (props) => {
+	const { sortData, dataKey, asc, children, defaultCSS } = props;
+	function sort() {
+		sortData(dataKey, !asc);
 	}
-	render() {
-		return (
-			<th onClick={this.sort}> {this.props.children} <br/><i className={this.state.sortCssClass} aria-hidden="true"/></th>
-		);
+	let sortCssClass = "fas fa-sort";
+	switch (asc) {
+		case null:
+			sortCssClass = "fas fa-sort";
+			break;
+		case true:
+			sortCssClass = "fas fa-sort-amount-up";
+			break;
+		case false:
+			sortCssClass = "fas fa-sort-amount-down";
+			break;
 	}
-}
-SortableTblTh.propTypes = {
-	asc: React.PropTypes.bool,
-	sortData: React.PropTypes.func.isRequired,
-	dataKey:  React.PropTypes.string,
-	children: React.PropTypes.node
+	return (
+		<Wrap
+			onClick={sort}
+			count={dataKey.length}
+			className={defaultCSS ? "defaultCSS" : ""}
+		>
+			{children}
+			<br />
+			<i className={sortCssClass} aria-hidden="true" />
+		</Wrap>
+	);
 };
 
-export {SortableTblTh};
+export default SortableTblTh;
