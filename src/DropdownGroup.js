@@ -9,11 +9,15 @@ const Wrap = styled.div`
 			button.dropdownToggle {
 				position: relative;
 				border: 1px solid #ddd;
-				padding-right: 36px;
+				padding-right: 20px;
 				padding-left: 20px;
-				i {
+				.inner {
+					margin-right: 20px;
+				}
+				svg {
 					position: absolute;
-					right: 8px;
+					right: 10px;
+					top: 12px;
 				}
 			}
 		}
@@ -57,7 +61,7 @@ const DropdownGroup = (props) => {
 					className="dropdownToggle"
 					onClick={toggleDropdown}
 				>
-					{selected}
+					<div className="inner">{selected}</div>
 					<i
 						className={
 							show ? "fas fa-caret-up" : "fas fa-caret-down"

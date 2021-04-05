@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const projectRoot = process.cwd();
 const assetsPath = path.join(projectRoot, "public");
 const publicPath = "/";
-const host = "0.0.0.0";
 
 const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 	title: "ChingChingTest",
@@ -22,8 +21,8 @@ const config = {
 	},
 	target: "web",
 	output: {
-		path: __dirname + "/dist",
-		publicPath: "",
+		path: assetsPath,
+		publicPath: publicPath,
 		filename: "bundle.js",
 	},
 	plugins: [HtmlWebpackPluginConfig],
@@ -32,10 +31,6 @@ const config = {
 			{
 				test: /(\.jsx)|(\.js)$/i,
 				exclude: [/node_modules/],
-				include: [
-					path.join(projectRoot, "preview"),
-					path.join(projectRoot, "src"),
-				],
 				use: [
 					{
 						loader: "babel-loader",
