@@ -86,6 +86,7 @@ const SortableTblPager = (props) => {
 				<DropdownGroup
 					selected={curr + 1}
 					options={pageOptions}
+					defaultCSS={defaultCSS}
 					callback={setCurrentPage}
 				/>
 				<button
@@ -100,6 +101,7 @@ const SortableTblPager = (props) => {
 				<DropdownGroup
 					selected={rowPerPageText}
 					options={perPageOptions}
+					defaultCSS={defaultCSS}
 					callback={setCurrentRowsPerPage}
 				/>
 				<div>rows per page</div>

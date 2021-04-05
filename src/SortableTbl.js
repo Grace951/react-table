@@ -58,10 +58,22 @@ const SortableTblStyled = styled.div`
 	* {
 		box-sizing: border-box;
 		list-style: none;
+	}
+	ul {
 		margin: 0;
 		padding: 0;
 	}
-
+	select,
+	button {
+		appearance: none;
+		outline: 0;
+		cursor: pointer;
+		border: none;
+	}
+	button:disabled {
+		background-color: #ccc;
+		cursor: auto;
+	}
 	a {
 		text-decoration: none;
 	}
@@ -71,74 +83,6 @@ const SortableTblStyled = styled.div`
 		border-collapse: none;
 		border-spacing: 0px;
 		border-color: none;
-	}
-
-	[contenteditable] {
-		outline: 0px solid transparent;
-	}
-
-	fieldset {
-		border: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	select,
-	button {
-		appearance: none;
-		background: none;
-		outline: 0;
-		cursor: pointer;
-	}
-	button:disabled {
-		background-color: #ccc;
-		cursor: auto;
-	}
-	input,
-	select,
-	textarea {
-		appearance: none;
-		background-clip: border-box;
-		margin: 0;
-		outline: 0;
-		text-align: left;
-		border: none;
-	}
-
-	input[type="checkbox"],
-	input[type="radio"] {
-		width: auto;
-		height: auto;
-	}
-
-	input[type="checkbox"] {
-		appearance: checkbox;
-	}
-
-	input[type="radio"] {
-		appearance: radio;
-	}
-
-	textarea,
-	select[size],
-	select[multiple] {
-		height: auto;
-	}
-	select::-ms-expand {
-		display: none;
-	}
-
-	select:focus::-ms-value {
-		background-color: transparent;
-		color: inherit;
-	}
-
-	textarea {
-		resize: vertical;
-	}
-
-	input[type="search"]::-webkit-search-decoration {
-		display: none;
 	}
 `;
 

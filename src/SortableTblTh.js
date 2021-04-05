@@ -46,7 +46,7 @@ const SortableTblTh = (props) => {
 		>
 			{children}
 			<br />
-			<i className={sortCssClass} aria-hidden="true" />
+			<i className={sortCssClass} />
 		</Wrap>
 	);
 };

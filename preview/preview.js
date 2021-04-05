@@ -1,5 +1,5 @@
 import React from "react";
-import SortableTbl from "../src/SortableTbl";
+import SortableTbl from "../lib/react-sort-search-table";
 import ReactDOM from "react-dom";
 import ImageLoader from "./Imageloader";
 import styled from "styled-components";
@@ -314,14 +314,14 @@ let MyData = [
 	},
 ];
 
-const InputWrap = styled.input`
+const BtnWrap = styled.button`
 	padding: 10px 20px;
 	cursor: pointer;
 	border-radius: 3px;
 	background-color: #f0ad4e;
 	color: #fff;
 `;
-const DeleteInputWrap = styled.input`
+const DeleteBtnWrap = styled.button`
 	padding: 10px 20px;
 	cursor: pointer;
 	border-radius: 3px;
@@ -337,12 +337,7 @@ const BaseProductDeleteComponent = (props) => {
 	}
 	return (
 		<td>
-			<DeleteInputWrap
-				type="button"
-				className="btn btn-danger btn-sm"
-				value="Delete"
-				onClick={deleteItem}
-			/>
+			<DeleteBtnWrap onClick={deleteItem}>Delete</DeleteBtnWrap>
 		</td>
 	);
 };
@@ -412,12 +407,7 @@ const BaseProductEditComponent = (props) => {
 	}
 	return (
 		<td>
-			<InputWrap
-				type="button"
-				className="btn btn-warning btn-sm"
-				value="Edit"
-				onClick={editItem}
-			/>
+			<BtnWrap onClick={editItem}>Edit</BtnWrap>
 		</td>
 	);
 };

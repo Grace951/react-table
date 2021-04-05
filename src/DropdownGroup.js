@@ -6,14 +6,16 @@ const Wrap = styled.div`
 	&.defaultCSS {
 		.group {
 			position: relative;
-			button {
-				padding-right: 40px;
+			button.dropdownToggle {
+				position: relative;
+				border: 1px solid #ddd;
+				padding-right: 36px;
+				padding-left: 20px;
+				i {
+					position: absolute;
+					right: 8px;
+				}
 			}
-		}
-		.dropdownToggle {
-			border: 1px solid #ddd;
-			padding-right: 20px;
-			padding-left: 20px;
 		}
 		.dropdownMenu {
 			width: 100%;
@@ -56,6 +58,11 @@ const DropdownGroup = (props) => {
 					onClick={toggleDropdown}
 				>
 					{selected}
+					<i
+						className={
+							show ? "fas fa-caret-up" : "fas fa-caret-down"
+						}
+					/>
 				</button>
 				{show && (
 					<ul className="dropdownMenu" ref={ref}>
