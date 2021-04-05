@@ -1,87 +1,65 @@
-import webpack from 'webpack';
-import path from 'path';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const projectRoot = process.cwd();
+const assetsPath = path.join(projectRoot, "public");
+const publicPath = "/";
+const host = "0.0.0.0";
 
-let projectRoot = process.cwd();
-let HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-	title: 'ChingChingTest',
-	template: __dirname + '/src/index.html',
-	filename: 'index.html',
-	inject: 'body'
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+	title: "ChingChingTest",
+	template: path.resolve(projectRoot, "./index.html"),
+	filename: "index.html",
+	inject: "body",
 });
 
-export default {
-	debug: true,
-	devtool: 'inline-source-map',
-	noInfo: false,
-	entry: [
-		'eventsource-polyfill', // necessary for hot reloading with IE
-		'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-		path.resolve(__dirname, 'src/index.js')
-	],
-	target: 'web',
-	output: {
-		path: __dirname + '/dist', // Note: Physical files are only output by the production build task `npm run build`.
-		publicPath: '/',
-		filename: 'bundle.js'
-	},
+const config = {
 	devServer: {
-		contentBase: path.resolve(__dirname, 'src')
+		inline: true,
+		host,
+		port: 3100,
+		hot: true,
+		contentBase: assetsPath,
+		watchOptions: {
+			poll: true,
+		},
 	},
-	plugins: [
-		HtmlWebpackPluginConfig,
-		new webpack.HotModuleReplacementPlugin(),
-	],
+	cache: false,
+	devtool: "eval",
+	mode: "development",
+	context: projectRoot,
+	entry: {
+		bundle: [path.resolve(projectRoot, "index.js")],
+	},
+	target: "web",
+	output: {
+		path: assetsPath,
+		publicPath: publicPath,
+		pathinfo: false,
+		filename: "bundle/[name].js",
+		chunkFilename: "bundle/chunk-[name].js",
+		hotUpdateChunkFilename: "[hash].hot-update.js",
+	},
+	plugins: [HtmlWebpackPluginConfig],
 	module: {
-		loaders: [
+		rules: [
 			{
-				test: /(\.jsx?$|\.js$)/,
-				include: path.join(__dirname, 'src'),
-				exclude: /(node_modules)/,
-				loaders: ['babel']
+				test: /(\.jsx)|(\.js)$/i,
+				exclude: [/node_modules/],
+				use: [
+					{
+						loader: "babel-loader",
+					},
+				],
 			},
-			{
-				test   : /\.css$/,
-				loader: "style-loader!css-loader?sourceMap"
-			},
-			{
-				test: /(\.sass$|\.scss$)/,
-				loader: "style!css!sass"
-			},
-			{ 	test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
-				loader: "url-loader?limit=10000&mimetype=application/font-woff&name=fonts/[name].[ext]" ,
-				include: [
-                     path.resolve(projectRoot, './src/fonts/') ,
-					path.resolve(projectRoot, './node_modules/react-sort-search-table/lib/fonts/') ,
-                ],						
-			},
-			{ test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
-				loader: "file-loader?name=fonts/[name].[ext]" ,
-				include: [
-                     path.resolve(projectRoot, './src/fonts/') ,
-					path.resolve(projectRoot, './node_modules/react-sort-search-table/lib/fonts/') ,
-                ],
-			},
-			{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				loaders: [
-					'file-loader?name=./img/products/[name].[ext]&context='+path.join(__dirname, './src/img/products')
-				]
-			}
-		]
+		],
 	},
-    resolveLoader: {
-		modules: [
-			"node_modules"
-		],
-    },
-    resolve: {
-		modules: [
-			"node_modules"
-		],
-		alias: {
-			reactSortSearchTblFonts: path.join(__dirname, '/node_modules/react-sort-search-table/lib/fonts'),
-		}
-    },	
+	resolveLoader: {
+		modules: [path.join(projectRoot, "node_modules")],
+	},
+	resolve: {
+		modules: [path.join(projectRoot, "node_modules")],
+	},
+	profile: true,
 };
+
+module.exports = config;

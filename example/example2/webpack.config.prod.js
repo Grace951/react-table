@@ -1,93 +1,56 @@
-import webpack from 'webpack';
-import path from 'path';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-let projectRoot = process.cwd();
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const projectRoot = process.cwd();
+const assetsPath = path.join(projectRoot, "public");
+const publicPath = "/";
+const host = "0.0.0.0";
 
-var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-	title: 'ChingChingTest',
-	template: __dirname + '/src/index.html',
-	filename: 'index.html',
-	inject: 'body'
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+	title: "ChingChingTest",
+	template: path.resolve(projectRoot, "./index.html"),
+	filename: "index.html",
+	inject: "body",
 });
 
-const GLOBALS = {
-	'process.env.NODE_ENV': JSON.stringify('production')
+const config = {
+	cache: false,
+	devtool: "eval",
+	mode: "production",
+	context: projectRoot,
+	entry: {
+		bundle: [path.resolve(projectRoot, "index.js")],
+	},
+	target: "web",
+	output: {
+		path: __dirname + "/dist",
+		publicPath: "",
+		filename: "bundle.js",
+	},
+	plugins: [HtmlWebpackPluginConfig],
+	module: {
+		rules: [
+			{
+				test: /(\.jsx)|(\.js)$/i,
+				exclude: [/node_modules/],
+				include: [
+					path.join(projectRoot, "preview"),
+					path.join(projectRoot, "src"),
+				],
+				use: [
+					{
+						loader: "babel-loader",
+					},
+				],
+			},
+		],
+	},
+	resolveLoader: {
+		modules: [path.join(projectRoot, "node_modules")],
+	},
+	resolve: {
+		modules: [path.join(projectRoot, "node_modules")],
+	},
+	profile: true,
 };
 
-export default {
-	debug: true,
-	devtool: 'source-map',
-	noInfo: false,
-	entry: path.resolve(__dirname, 'src/index.js'),
-	target: 'web',
-	output: {
-		path: __dirname + '/dist', // Note: Physical files are only output by the production build task `npm run build`.
-		publicPath: '',
-		filename: "bundle.js"
-	},
-	devServer: {
-		contentBase: path.resolve(__dirname, 'dist')
-	},
-	plugins: [
-		HtmlWebpackPluginConfig,
-		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.DefinePlugin(GLOBALS),
-		new ExtractTextPlugin('css/main.css', {
-			allChunks: true
-		}),
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin()
-	],
-	module: {
-		loaders: [
-			{
-				test: /(\.jsx?$|\.js$)/,
-				include: path.join(__dirname, 'src'),
-				exclude: /(node_modules)/,
-				loaders: ['babel']
-			},
-			{
-				test   : /\.css$/,
-				loader: "style-loader!css-loader?sourceMap"
-			},
-			{
-				test: /(\.sass$|\.scss$)/,
-				loader: "style!css!sass"
-			},
-			{ 	test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
-				loader: "url-loader?limit=10000&mimetype=application/font-woff&name=fonts/[name].[ext]" ,
-				include: [
-                     path.resolve(projectRoot, './src/fonts/') ,
-					path.resolve(projectRoot, './node_modules/react-sort-search-table/lib/fonts/') ,
-                ],						
-			},
-			{ test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
-				loader: "file-loader?name=fonts/[name].[ext]" ,
-				include: [
-                     path.resolve(projectRoot, './src/fonts/') ,
-					path.resolve(projectRoot, './node_modules/react-sort-search-table/lib/fonts/') ,
-                ],
-			},
-			{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				loaders: [
-					'file-loader?name=./img/products/[name].[ext]&context='+path.join(__dirname, './src/img/products')
-				]
-			}
-		]
-	},
-    resolveLoader: {
-		modules: [
-			"node_modules"
-		],
-    },
-    resolve: {
-		modules: [
-			"node_modules"
-		],
-		alias: {
-			reactSortSearchTblFonts: path.join(__dirname, '/node_modules/react-sort-search-table/lib/fonts'),
-		}
-    },		
-};
+module.exports = config;

@@ -21,7 +21,8 @@
 		"table"
 	],
 	"peerDependencies": {
-		"react": ">= 16.8.2"
+		"react": ">= 16.8.2",
+		"react-dom": ">= 16.8.2"
 	},
 	"dependencies": {
 		"babel-plugin-styled-components": "^1.12.0",
