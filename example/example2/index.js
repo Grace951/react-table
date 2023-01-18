@@ -1,8 +1,7 @@
-import React from "react";
 import SortableTbl from "react-sort-search-table";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import ImageLoader from "./Imageloader";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 const Wrap = styled.div`
 	max-width: 1200px;
@@ -460,4 +459,5 @@ const ProductsTblPage = (props) => {
 	);
 };
 
-ReactDOM.render(<ProductsTblPage />, document.getElementById("app"));
+const root = createRoot(document.getElementById("app"));
+root.render(<ProductsTblPage />);

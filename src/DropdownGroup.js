@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import styled from "styled-components";
+import { useState, useRef } from "react";
+import styled from "@emotion/styled";
 import { useOnClickOutside } from "./hooks";
 
 const Wrap = styled.div`
@@ -49,7 +49,7 @@ const DropdownGroup = (props) => {
 		setShow(!show);
 	}
 	function select(e) {
-		let i = e.target.getAttribute("data-i");
+		const i = e.target.getAttribute("data-i");
 		setShow(false);
 		callback && callback(i);
 	}

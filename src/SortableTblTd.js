@@ -1,5 +1,4 @@
-import React from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 const Wrap = styled.tr`
 	&.defaultCSS {
@@ -22,13 +21,11 @@ const Wrap = styled.tr`
 	}
 `;
 
-const SortableTblTd = (props) => {
-	const { customTd, tdData, defaultCSS } = props;
+const SortableTblTd = ({ customTd, tdData, dKey = [], defaultCSS }) => {
 	return (
 		<Wrap className={defaultCSS ? "defaultCSS" : ""}>
-			{props.dKey.map((item, id) => {
-				let CustomTdComponent = null;
-				CustomTdComponent =
+			{dKey.map((item, id) => {
+				const CustomTdComponent =
 					customTd &&
 					customTd
 						.filter((i) => {
@@ -44,7 +41,6 @@ const SortableTblTd = (props) => {
 					return (
 						<CustomTdComponent
 							key={id}
-							{...props}
 							tdData={tdData[item]}
 							field={item}
 							rowData={tdData}

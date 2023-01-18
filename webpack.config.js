@@ -1,10 +1,9 @@
 // webpack.config.js
 
 let webpack = require("webpack");
-let path = require("path");
+const PnpWebpackPlugin = require("pnp-webpack-plugin");
 let libraryName = "react-sort-search-table";
 let outputFile = libraryName + ".js";
-let projectRoot = process.cwd();
 
 let config = {
 	entry: __dirname + "/src/SortableTbl.js",
@@ -34,19 +33,34 @@ let config = {
 	module: {
 		rules: [
 			{
-				test: /(\.jsx|\.js)$/,
+				test: /\.js$|\.tsx?$/,
+				type: "javascript/auto",
 				loader: "babel-loader",
-				exclude: /(node_modules|bower_components)/,
-				include: path.resolve("src"),
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.css$/i,
+				use: [
+					"style-loader",
+					{
+						loader: "css-loader",
+						options: {
+							modules: true,
+						},
+					},
+				],
+			},
+			{
+				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2|json|xml|ico|cur|ani)$/,
+				use: ["file-loader?name=[path][name].[ext]"],
 			},
 		],
 	},
-	resolveLoader: {
-		modules: ["node_modules"],
-	},
 	resolve: {
-		modules: ["node_modules"],
-		extensions: [".js", ".jsx"],
+		plugins: [PnpWebpackPlugin],
+	},
+	resolveLoader: {
+		plugins: [PnpWebpackPlugin.moduleLoader(module)],
 	},
 };
 

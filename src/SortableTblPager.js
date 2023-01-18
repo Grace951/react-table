@@ -1,5 +1,4 @@
-import React from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import DropdownGroup from "./DropdownGroup";
 
 const Wrap = styled.div`
@@ -60,9 +59,9 @@ const SortableTblPager = (props) => {
 		setRowsPerPage(i);
 	}
 
-	let nextDisableStyle = curr + 1 >= totalPage;
-	let prevDisableStyle = curr + 1 <= 1;
-	let rowPerPageText = totalPage === 1 ? "All" : rowPerPage;
+	const nextDisableStyle = curr + 1 >= totalPage;
+	const prevDisableStyle = curr + 1 <= 1;
+	const rowPerPageText = totalPage === 1 ? "All" : rowPerPage;
 
 	const pageOptions = Array.from(Array(totalPage).keys()).map((item) => ({
 		value: item,

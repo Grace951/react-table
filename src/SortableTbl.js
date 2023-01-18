@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import SortableTblPager from "./SortableTblPager";
 import SortableTblTh from "./SortableTblTh";
 import SortableTblTd from "./SortableTblTd";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 const SortableTblStyled = styled.div`
 	&.defaultCSS {
@@ -86,17 +86,16 @@ const SortableTblStyled = styled.div`
 	}
 `;
 
-const SortableTbl = (props) => {
-	const {
-		tblData,
-		paging,
-		tHead,
-		customTd,
-		dKey,
-		defaultCSS,
-		defaultRowsPerPage,
-		search,
-	} = props;
+const SortableTbl = ({
+	tblData = [],
+	tHead = [],
+	dKey = [],
+	customTd = [],
+	paging = true,
+	search = true,
+	defaultCSS = true,
+	defaultRowsPerPage = 5,
+}) => {
 	const [filterString, setFilterString] = useState("");
 	const [data, setData] = useState(tblData || []);
 	const [pagers, setPager] = useState({
@@ -114,7 +113,7 @@ const SortableTbl = (props) => {
 	}, [tblData]);
 
 	function appplyfilter(e) {
-		let newData = tblData.filter((item) => {
+		const newData = tblData.filter((item) => {
 			for (let key in item) {
 				let v = item[key] && item[key].toString().toLowerCase();
 				if (v && v.indexOf(e.target.value.toLowerCase()) !== -1) {
@@ -128,8 +127,8 @@ const SortableTbl = (props) => {
 		setData(newData);
 	}
 	function sortData(dKey, nAsc) {
-		let newAsc = asc;
-		let newData = data;
+		const newAsc = asc;
+		const newData = data;
 		newData.sort((a, b) => {
 			if (a[dKey] === b[dKey]) return 0;
 			if (nAsc ? a[dKey] > b[dKey] : a[dKey] < b[dKey]) return 1;
@@ -144,14 +143,16 @@ const SortableTbl = (props) => {
 		setData(newData);
 	}
 	function setCurrentPage(i) {
-		let index = parseInt(i);
+		const index = parseInt(i);
 		setPager(Object.assign({}, pagers, { curr: index }));
 	}
 	function setRowsPerPage(i) {
-		let index = parseInt(i);
+		const index = parseInt(i);
 		let nCurr = pagers.curr;
-		let pagesCount = Math.ceil(data.length / index);
-		if (pagers.curr >= pagesCount) nCurr = pagesCount - 1;
+		const pagesCount = Math.ceil(data.length / index);
+		if (pagers.curr >= pagesCount) {
+			nCurr = pagesCount - 1;
+		}
 		setPager(
 			Object.assign({}, pagers, {
 				rowsPerPage: index,
@@ -160,14 +161,14 @@ const SortableTbl = (props) => {
 		);
 	}
 
-	let pagesCount = Math.ceil(data.length / pagers.rowsPerPage);
-	let pageData = data.slice();
-	if (pagers.paging) {
-		pageData = pageData.slice(
-			pagers.curr * pagers.rowsPerPage,
-			(pagers.curr + 1) * pagers.rowsPerPage
-		);
-	}
+	const pagesCount = Math.ceil(data.length / pagers.rowsPerPage);
+	const pageData = pagers.paging
+		? data.slice(
+				pagers.curr * pagers.rowsPerPage,
+				(pagers.curr + 1) * pagers.rowsPerPage
+		  )
+		: data.slice();
+
 	const empty = !pageData || !pageData.length;
 	return (
 		<SortableTblStyled className={defaultCSS ? "defaultCSS" : ""}>
@@ -209,7 +210,6 @@ const SortableTbl = (props) => {
 							return (
 								<SortableTblTd
 									key={id}
-									{...props}
 									defaultCSS={defaultCSS}
 									tdData={item}
 									dKey={dKey}
@@ -244,17 +244,6 @@ const SortableTbl = (props) => {
 			</div>
 		</SortableTblStyled>
 	);
-};
-
-SortableTbl.defaultProps = {
-	tblData: [],
-	tHead: [],
-	dKey: [],
-	customTd: [],
-	paging: true,
-	search: true,
-	defaultCSS: true,
-	defaultRowsPerPage: 5,
 };
 
 export default SortableTbl;
